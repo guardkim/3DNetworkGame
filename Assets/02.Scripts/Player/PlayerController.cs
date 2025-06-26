@@ -22,21 +22,18 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        h = Input.GetAxis("Horizontal");
-        v = Input.GetAxis("Vertical");
+        h = Input.GetAxisRaw("Horizontal");
+        v = Input.GetAxisRaw("Vertical");
         _isMove = h != 0 || v != 0;
         _animator.SetFloat("h", h);
         _animator.SetFloat("v", v);
         _animator.SetBool("isMove", _isMove);
+        Movement();
         if (Input.GetButtonDown("Jump"))
         {
             Jump();
         }
 
-    }
-    private void FixedUpdate()
-    {
-        Movement();
     }
 
     public void Jump()
@@ -51,20 +48,14 @@ public class PlayerController : MonoBehaviour
     {
         _isMove = true;
 
+
         Vector3 moveDirection = new Vector3(h, 0, v).normalized;
+        moveDirection = Camera.main.transform.TransformDirection(moveDirection);
         Vector3 move = moveDirection * moveSpeed;
 
-        // 중력 적용
-        if (_controller.isGrounded)
-        {
-            _velocity.y = -2f; // 살짝 음수로 설정해서 바닥에 붙어있도록
-        }
-        else
-        {
-            _velocity.y -= gravity * Time.fixedDeltaTime;
-        }
+        _velocity.y -= gravity * Time.deltaTime;
 
         move.y = _velocity.y;
-        _controller.Move(move * Time.fixedDeltaTime);
+        _controller.Move(move * Time.deltaTime);
     }
 }
