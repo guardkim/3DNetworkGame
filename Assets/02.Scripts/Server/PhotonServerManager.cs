@@ -62,6 +62,11 @@ public class PhotonServerManager : MonoBehaviourPunCallbacks
         foreach (KeyValuePair<int, Player> player in roomPlayers)
         {
             Debug.Log($"{player.Value.NickName} : {player.Value.ActorNumber}");
+            // ActorNumber는 Room안에서의 플레이어에 대한 판별 ID
+            // ㄴ 이것만으로 충분
+
+            // 진짜 고유 아이디
+            Debug.Log(player.Value.UserId); // 잘 안쓰이지만, 친구 기능, 귓속말 등등에 쓰임
         }
     }
 
