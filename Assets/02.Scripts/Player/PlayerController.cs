@@ -5,6 +5,7 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float gravity = 9.81f;
+    [SerializeField] private float jumpHeight = 3f;
 
     private CharacterController controller;
     private Vector3 velocity;
@@ -14,9 +15,23 @@ public class PlayerController : MonoBehaviour
         controller = GetComponent<CharacterController>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         Movement();
+
+        // 스페이스바로 점프
+        if (Input.GetButtonDown("Jump"))
+        {
+            Jump();
+        }
+    }
+
+    public void Jump()
+    {
+        if (controller.isGrounded)
+        {
+            velocity.y = Mathf.Sqrt(jumpHeight * 2f * gravity);
+        }
     }
 
     public void Movement()
@@ -30,7 +45,7 @@ public class PlayerController : MonoBehaviour
         // 중력 적용
         if (controller.isGrounded)
         {
-            velocity.y = -2f;
+            velocity.y = -2f; // 살짝 음수로 설정해서 바닥에 붙어있도록
         }
         else
         {
