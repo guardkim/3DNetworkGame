@@ -7,52 +7,64 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float gravity = 9.81f;
     [SerializeField] private float jumpHeight = 3f;
 
-    private CharacterController controller;
-    private Vector3 velocity;
+    private float h;
+    private float v;
+    private CharacterController _controller;
+    private Animator _animator;
+    private Vector3 _velocity;
+    private bool _isMove;
 
     private void Start()
     {
-        controller = GetComponent<CharacterController>();
+        _controller = GetComponent<CharacterController>();
+        _animator = GetComponent<Animator>();
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
-        Movement();
-
-        // 스페이스바로 점프
+        h = Input.GetAxis("Horizontal");
+        v = Input.GetAxis("Vertical");
+        _isMove = h != 0 || v != 0;
+        _animator.SetFloat("h", h);
+        _animator.SetFloat("v", v);
+        _animator.SetBool("isMove", _isMove);
         if (Input.GetButtonDown("Jump"))
         {
             Jump();
         }
+
+    }
+    private void FixedUpdate()
+    {
+        Movement();
     }
 
     public void Jump()
     {
-        if (controller.isGrounded)
+        if (_controller.isGrounded)
         {
-            velocity.y = Mathf.Sqrt(jumpHeight * 2f * gravity);
+            _velocity.y = Mathf.Sqrt(jumpHeight * 2f * gravity);
         }
     }
 
     public void Movement()
     {
-        float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
+        _isMove = true;
 
         Vector3 moveDirection = new Vector3(h, 0, v).normalized;
         Vector3 move = moveDirection * moveSpeed;
 
         // 중력 적용
-        if (controller.isGrounded)
+        if (_controller.isGrounded)
         {
-            velocity.y = -2f; // 살짝 음수로 설정해서 바닥에 붙어있도록
+            _velocity.y = -2f; // 살짝 음수로 설정해서 바닥에 붙어있도록
         }
         else
         {
-            velocity.y -= gravity * Time.deltaTime;
+            _velocity.y -= gravity * Time.fixedDeltaTime;
         }
 
-        move.y = velocity.y;
-        controller.Move(move * Time.deltaTime);
+        move.y = _velocity.y;
+        _controller.Move(move * Time.fixedDeltaTime);
     }
 }
