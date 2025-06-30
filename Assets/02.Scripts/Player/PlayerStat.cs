@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerStat
 {
     public float MoveSpeed = 7f;
+    public float RunSpeed = 12f;
     public float JumpForce = 2.5f;
     public float RotationSpeed = 300f;
     public float AttackSpeed = 1.6f;

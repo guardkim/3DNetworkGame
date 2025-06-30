@@ -1,7 +1,7 @@
 using Photon.Pun;
 using UnityEngine;
 
-public class PlayerMove : PlayerAbility
+public class PlayerMove : PlayerAbility, IPunObservable
 {
     [SerializeField] private float gravity = 9.81f;
 
@@ -13,19 +13,34 @@ public class PlayerMove : PlayerAbility
 
     private Vector3 _receivedPosition = Vector3.zero;
     private Quaternion _receivedRotation = Quaternion.identity;
+    private const float DAMPING = 20f;
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
+        // 데이터 동기화를 위한 데이터 전송 및 수신 기능
+        // stream : 서버에서 주고받을 데이터가 담겨있는 변수
+        // info   : 송수신 성공/실패 여부에 대한 로그
         if (stream.IsWriting )
         {
+            Debug.Log("전송중");
+            // 내꺼의 데이터만 보내준다...
+            // 데이터를 전송하는 상황 -> 데이터를 보내주면 되고,
             stream.SendNext(transform.position);
             stream.SendNext(transform.rotation);
         }
         else if (stream.IsReading )
         {
+            Debug.Log("수신중");
+            // 데이터를 수신하는 상황 -> 받은 데이터를 세팅하면 됩니다.
+            // 보내준 순서대로 받는다.
             _receivedPosition = (Vector3)stream.ReceiveNext();
             _receivedRotation = (Quaternion)stream.ReceiveNext();
-
+        }
+        if (!_photonView.IsMine)
+        {
+            transform.position = Vector3.Lerp(transform.position, _receivedPosition, Time.deltaTime * DAMPING);
+            transform.rotation = Quaternion.Slerp(transform.rotation, _receivedRotation, Time.deltaTime * DAMPING);
+            return;
         }
     }
     private void Start()
@@ -99,7 +114,7 @@ public class PlayerMove : PlayerAbility
             _animator.SetFloat("v", 2);
             TryUseStamina(20f * Time.deltaTime);
             // _owner.Stat.Stamina -= 10f * Time.deltaTime;
-            move = moveDirection * (_owner.Stat.MoveSpeed * 2);
+            move = moveDirection * _owner.Stat.RunSpeed;
         }
 
         _velocity.y -= gravity * Time.deltaTime;
