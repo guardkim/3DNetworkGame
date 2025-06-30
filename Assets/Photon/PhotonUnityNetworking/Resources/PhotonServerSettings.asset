@@ -46,6 +46,7 @@ MonoBehaviour:
   - DieAnimation
   - ReviveAnimation
   - OnDie
+  - Revive
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0
