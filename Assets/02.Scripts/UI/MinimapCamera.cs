@@ -18,9 +18,11 @@ public class MinimapCamera : MonoBehaviour
     {
         if (Target == null)
         {
-            Debug.Log("타겟이 없음 ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ");
-            Player player = FindAnyObjectByType<Player>();
-
+            // Debug.Log("타겟이 없음 ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ");
+            // Player player = FindAnyObjectByType<Player>();
+            // player.GetAbility<PlayerAbility>()
+            // Target = player.transform;
+            return;
         }
 
         Vector3 targetPosition = Target.position;

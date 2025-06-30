@@ -19,9 +19,12 @@ public class PlayerRotate : PlayerAbility
 
         CinemachineCamera cinemachineCamera = GameObject.FindWithTag("FollowCamera").GetComponent<CinemachineCamera>();
         cinemachineCamera.Follow = CameraRoot;
+        MinimapCamera minimapCamera = FindObjectOfType<MinimapCamera>();
+        minimapCamera.Target = CameraRoot;
     }
     private void Update()
     {
+        if (!_photonView.IsMine) return;
         // 1. 마우스 입력 받기
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");

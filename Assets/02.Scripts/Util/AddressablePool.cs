@@ -36,6 +36,8 @@ public class AddressablesPool : IPunPrefabPool
         Debug.Log($"[AddressablesPool] Instantiate 요청됨: {prefabId}");
         if (_prefabCache.TryGetValue(prefabId, out GameObject prefab))
         {
+            // var instance = Object.Instantiate(prefab, position, rotation);
+            // instance.SetActive(false);
             return Object.Instantiate(prefab, position, rotation);
         }
 

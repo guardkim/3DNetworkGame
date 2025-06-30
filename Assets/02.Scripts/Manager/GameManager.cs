@@ -11,7 +11,7 @@ public class GameManager : Singleton<GameManager>
     }
     private void Start()
     {
-        Canvas.StaminaBind(Player.Stat);
+        //Canvas.StaminaBind(Player.Stat);
     }
 }
 

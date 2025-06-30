@@ -14,7 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_GroupName: Default Local Group
   m_GUID: 789b4feb7ff39b0458f9c1c433a1df61
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 2dd489a6be3983449b17bb434794bdeb
+    m_Address: StaminaProgressbar
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2dfbb63c9cdf7504faf4ff26b0581598
+    m_Address: Player
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 77a64f7e870a7254d8fb68eea01110b5, type: 2}
   m_SchemaSet:

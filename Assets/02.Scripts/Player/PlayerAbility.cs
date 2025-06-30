@@ -16,10 +16,7 @@ public abstract class PlayerAbility : MonoBehaviour
         _photonView = GetComponent<PhotonView>();
         _animator = GetComponent<Animator>();
     }
-    private void Start()
-    {
-        UI_Canvas.Instance.StaminaBind(_owner.Stat);
-    }
+
     private void Update()
     {
         HandleStaminaRegen();

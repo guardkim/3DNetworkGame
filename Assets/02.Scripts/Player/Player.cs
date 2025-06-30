@@ -2,11 +2,18 @@ using System;
 using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IDamageable
 {
     public PlayerStat Stat;
-    private readonly Dictionary<Type, PlayerAbility> _abilitiesCache = new Dictionary<Type, PlayerAbility>();
+    private Dictionary<Type, PlayerAbility> _abilitiesCache = new();
 
+    [PunRPC]
+    public void Damaged(float damage)
+    {
+        Stat.Health = Mathf.Max(0, Stat.Health - damage);
+        GetAbility<PlayerHealth>().Refresh();
+        Debug.Log($"{Stat.Health}현재 체력");
+    }
     public T GetAbility<T>() where T : PlayerAbility
     {
         Type type = typeof(T);
@@ -26,4 +33,5 @@ public class Player : MonoBehaviour
 
         throw new Exception($"어빌리티 {type.Name}을 {gameObject.name}에서 찾을 수 없습니다");
     }
+
 }

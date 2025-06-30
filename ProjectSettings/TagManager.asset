@@ -8,6 +8,8 @@ TagManager:
   - MainCanvas
   - Singleton
   - Minimap
+  - Bullet
+  - Weapon
   layers:
   - Default
   - TransparentFX

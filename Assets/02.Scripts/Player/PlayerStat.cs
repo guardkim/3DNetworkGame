@@ -8,9 +8,16 @@ public class PlayerStat
     public float RunSpeed = 12f;
     public float JumpForce = 2.5f;
     public float RotationSpeed = 300f;
-    public float AttackSpeed = 1.6f;
 
-    //Stamina
+    [Header("체력")]
+    public float MaxHealth = 100;
+    public float Health = 100;
+
+    [Header("공격")]
+    public float AttackSpeed = 1.6f;
+    public float Damage =  20.0f;
+
+    [Header("스태미나")]
     private float _stamina;
     public float MaxStamina = 100.0f;
     public float StaminaRecovery = 5.0f;

@@ -1,7 +1,7 @@
 using Photon.Pun;
 using UnityEngine;
 
-public class PlayerMove : PlayerAbility, IPunObservable
+public class PlayerMove : PlayerAbility
 {
     [SerializeField] private float gravity = 9.81f;
 
@@ -11,10 +11,11 @@ public class PlayerMove : PlayerAbility, IPunObservable
     private Vector3 _velocity;
     private bool _isRunning;
 
-    private Vector3 _receivedPosition = Vector3.zero;
-    private Quaternion _receivedRotation = Quaternion.identity;
+    private Vector3 _receivedPosition;
+    private Quaternion _receivedRotation;
     private const float DAMPING = 20f;
 
+    public GameObject[] Images;
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         // 데이터 동기화를 위한 데이터 전송 및 수신 기능
@@ -36,37 +37,52 @@ public class PlayerMove : PlayerAbility, IPunObservable
             _receivedPosition = (Vector3)stream.ReceiveNext();
             _receivedRotation = (Quaternion)stream.ReceiveNext();
         }
-        if (!_photonView.IsMine)
-        {
-            transform.position = Vector3.Lerp(transform.position, _receivedPosition, Time.deltaTime * DAMPING);
-            transform.rotation = Quaternion.Slerp(transform.rotation, _receivedRotation, Time.deltaTime * DAMPING);
-            return;
-        }
+
     }
     private void Start()
     {
         _controller = GetComponent<CharacterController>();
+        if (_photonView.IsMine)
+        {
+            Images[0].SetActive(true);
+            UI_Canvas.Instance.StaminaBind(_owner.Stat);
+
+        }
+        else
+        {
+            Images[1].SetActive(true);
+        }
     }
 
     private void Update()
     {
-        h = Input.GetAxisRaw("Horizontal");
-        v = Input.GetAxisRaw("Vertical");
-        _animator.SetFloat("h", h);
-        _animator.SetFloat("v", v);
+        if (_photonView.IsMine == false) return;
+        // {
+        //     transform.position = Vector3.Lerp(transform.position, _receivedPosition, Time.deltaTime * DAMPING);
+        //     transform.rotation = Quaternion.Slerp(transform.rotation, _receivedRotation, Time.deltaTime * DAMPING);
+        //     return;
+        // }
+
 
         Movement();
         if (Input.GetButtonDown("Jump") && _controller.isGrounded && TryUseStamina(15f))
         {
             _velocity.y = Mathf.Sqrt(_owner.Stat.JumpForce * 2f * gravity);
-            _animator.SetTrigger("JumpStart");
+            // _animator.SetTrigger("JumpStart");
+            _photonView.RPC(nameof(JumpStart), RpcTarget.All);
+
             _animator.SetBool("IsJumping", true);
             _animator.SetBool("IsFalling", false);
-            // _owner.Stat.Stamina -= 15f;
         }
         HandleJumpState();
         _isRunning = Input.GetKey(KeyCode.LeftShift);
         CanRegenStamina();
+    }
+
+    [PunRPC]
+    private void JumpStart()
+    {
+        _animator.SetTrigger("JumpStart");
     }
 
     protected override bool CanRegenStamina()
@@ -105,6 +121,11 @@ public class PlayerMove : PlayerAbility, IPunObservable
 
     public void Movement()
     {
+        h = Input.GetAxisRaw("Horizontal");
+        v = Input.GetAxisRaw("Vertical");
+        _animator.SetFloat("h", h);
+        _animator.SetFloat("v", v);
+
         Vector3 moveDirection = new Vector3(h, 0, v).normalized;
         moveDirection = Camera.main.transform.TransformDirection(moveDirection);
         Vector3 move = moveDirection * _owner.Stat.MoveSpeed;
@@ -116,6 +137,7 @@ public class PlayerMove : PlayerAbility, IPunObservable
             // _owner.Stat.Stamina -= 10f * Time.deltaTime;
             move = moveDirection * _owner.Stat.RunSpeed;
         }
+
 
         _velocity.y -= gravity * Time.deltaTime;
 
