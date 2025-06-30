@@ -42,6 +42,10 @@ MonoBehaviour:
   - PlayAttackAnimation
   - Damaged
   - JumpStart
+  - Die
+  - DieAnimation
+  - ReviveAnimation
+  - OnDie
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

@@ -13,7 +13,23 @@ public class Player : MonoBehaviour, IDamageable
         Stat.Health = Mathf.Max(0, Stat.Health - damage);
         GetAbility<PlayerHealth>().Refresh();
         Debug.Log($"{Stat.Health}현재 체력");
+
+
+        if (Stat.Health <= 0)
+        {
+            PhotonView pv = GetComponent<PhotonView>();
+            pv.RPC(nameof(OnDie), RpcTarget.All);
+        }
     }
+
+    [PunRPC]
+    public void OnDie()
+    {
+        GetAbility<PlayerHealth>().Die();
+    }
+
+
+
     public T GetAbility<T>() where T : PlayerAbility
     {
         Type type = typeof(T);

@@ -34,5 +34,20 @@ public class PlayerStat
             OnStaminaChanged?.Invoke(_stamina / MaxStamina); // 0~1 비율
         }
     }
+
+    public void Init()
+    {
+        MoveSpeed = 7f;
+        RunSpeed = 12f;
+        JumpForce = 2.5f;
+        RotationSpeed = 300f;
+        MaxHealth = 100;
+        Health = 100;
+        AttackSpeed = 1.6f;
+        Damage =  20.0f;
+        _stamina = 100.0f;
+        MaxStamina = 100.0f;
+        StaminaRecovery = 5.0f;
+    }
     public event Action<float> OnStaminaChanged;
 }

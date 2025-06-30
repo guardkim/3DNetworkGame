@@ -46,7 +46,6 @@ public class PlayerMove : PlayerAbility
         {
             Images[0].SetActive(true);
             UI_Canvas.Instance.StaminaBind(_owner.Stat);
-
         }
         else
         {
@@ -57,13 +56,6 @@ public class PlayerMove : PlayerAbility
     private void Update()
     {
         if (_photonView.IsMine == false) return;
-        // {
-        //     transform.position = Vector3.Lerp(transform.position, _receivedPosition, Time.deltaTime * DAMPING);
-        //     transform.rotation = Quaternion.Slerp(transform.rotation, _receivedRotation, Time.deltaTime * DAMPING);
-        //     return;
-        // }
-
-
         Movement();
         if (Input.GetButtonDown("Jump") && _controller.isGrounded && TryUseStamina(15f))
         {
