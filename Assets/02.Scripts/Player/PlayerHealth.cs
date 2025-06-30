@@ -18,6 +18,7 @@ public class PlayerHealth : PlayerAbility
     }
     private void Update()
     {
+        if (_photonView.IsMine == false) return;
         if (_isDead)
         {
             _reviveTimer -= Time.deltaTime;
@@ -48,11 +49,7 @@ public class PlayerHealth : PlayerAbility
         _isDead = false;
         _animator.SetBool("IsDead", false);
         _owner.Stat.Init();
-    }
-
-    [PunRPC]
-    private void ReviveAnimation()
-    {
-        _animator.SetBool("IsDead", false);
+        transform.position = SpawnPoints.Instance.GetRandomSpawnPoint();
+        Refresh();
     }
 }
