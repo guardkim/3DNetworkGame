@@ -9,6 +9,9 @@ public class RoomManager : SingletonPhoton<RoomManager>
     public Room Room => _room;
 
     public event Action OnRoomDataChanged;
+    public event Action<string> OnPlayerEnter;
+    public event Action<string> OnPlayerExit;
+    public event Action<string, string> OnPlayerDied;
     protected override void Awake()
     {
         base.Awake();
@@ -27,14 +30,39 @@ public class RoomManager : SingletonPhoton<RoomManager>
         OnRoomDataChanged?.Invoke();
     }
     // 새로운 플레이어가(나를 제외하고) 방에 입장하면 자동으로 호출되는 함수
-    public override void OnPlayerEnteredRoom(Photon.Realtime.Player player)
+    public override void OnPlayerEnteredRoom(Photon.Realtime.Player otherPlayer)
     {
         OnRoomDataChanged?.Invoke();
+        //1. 이 코드는 Manager가 UI에 대한 의존성이 생긴다.
+        // UI_RoomLog.Instance.PlayerEnterLog(player.Nickname);
+        //2. 두번째 방법은 UI가 MonobehaviourPunCallbacks를 상속하고, 이 함수를 override하여 사용
+        //위 방식은 서버에 대한 이슈가 있을 때 UI까지 다 수정해야한다.
+        //UI가 직접 서버 로직을 아는 것은 스마트 UI
+        //3. 결국 관리는 Manager가... Action 하나 더 만들면 된다.
+        OnPlayerEnter?.Invoke(otherPlayer.NickName + "_" + otherPlayer.ActorNumber);
     }
     // 새로운 플레이어가(나를 제외하고) 방에서 퇴장하면 자동으로 호출되는 함수
-    public override void OnPlayerLeftRoom(Photon.Realtime.Player player)
+    public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
     {
         OnRoomDataChanged?.Invoke();
+        OnPlayerExit?.Invoke(otherPlayer.NickName + "_" + otherPlayer.ActorNumber);
+    }
+    public void OnPlayerDeath(int actorNumber, int otherActorNumber)
+    {
+        // actorNumber가 otherActerNumber에 의해 죽었다.
+        string deadActorNickName = _room.Players[actorNumber].NickName + "_" + actorNumber;
+        string attackerActorNickName;
+
+        // 0번은 지형에 의한 사망(DeadZone)
+        if (otherActorNumber == 0)
+        {
+            attackerActorNickName = "지형지물";
+        }
+        else
+        {
+            attackerActorNickName = _room.Players[otherActorNumber].NickName + "_" + otherActorNumber;
+        }
+        OnPlayerDied?.Invoke(deadActorNickName, attackerActorNickName);
     }
     private void GeneratePlayer()
     {

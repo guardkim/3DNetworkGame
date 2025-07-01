@@ -28,7 +28,7 @@ public class Player : MonoBehaviour, IDamageable
     }
 
     [PunRPC]
-    public void Damaged(float damage)
+    public void Damaged(float damage, int attackerActorNumber)
     {
         if (State == EPlayerState.Death) return;
         Stat.Health = Mathf.Max(0, Stat.Health - damage);
@@ -41,6 +41,8 @@ public class Player : MonoBehaviour, IDamageable
 
             PhotonView pv = GetComponent<PhotonView>();
             pv.RPC(nameof(OnDie), RpcTarget.All);
+
+            RoomManager.Instance.OnPlayerDeath(pv.Owner.ActorNumber, attackerActorNumber);
         }
         else
         {

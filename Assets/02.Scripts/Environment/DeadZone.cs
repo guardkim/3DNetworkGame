@@ -8,7 +8,7 @@ public class DeadZone : MonoBehaviour
     {
         if (other.GetComponent<IDamageable>() != null)
         {
-            other.GetComponent<Player>().Damaged(100000000);
+            other.GetComponent<Player>().Damaged(100000000, 0);
         }
     }
 }
