@@ -2,23 +2,36 @@ using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerHealth : PlayerAbility
+public class PlayerHealth : PlayerAbility, IPunObservable
 {
     public Slider HealthSlider;
     private bool _isDead = false;
     private float _reviveTimer = 5.0f;
+    private float _receivedValue = 1f;
 
     private void Start()
     {
         Refresh();
     }
-    public void Refresh()
+    private void Refresh()
     {
-        HealthSlider.value = _owner.Stat.Health / _owner.Stat.MaxHealth;
+        HealthSlider.value = _owner.Stat.Health / _owner.Stat.MaxHealth-30;
+    }
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(_owner.Stat.Health /  _owner.Stat.MaxHealth);
+        }
+        else if (stream.IsReading)
+        {
+            float value = (float)stream.ReceiveNext();
+            _receivedValue = value;
+        }
     }
     private void Update()
     {
-        if (_photonView.IsMine == false) return;
+        Refresh();
         if (_isDead)
         {
             _reviveTimer -= Time.deltaTime;
@@ -52,4 +65,5 @@ public class PlayerHealth : PlayerAbility
         transform.position = SpawnPoints.Instance.GetRandomSpawnPoint();
         Refresh();
     }
+
 }

@@ -33,7 +33,7 @@ public class PlayerAttack : PlayerAbility
     {
         // 쉽게 PlayerController에 접근하는 방법
         // _owner.GetAbility<PlayerMove>();
-        if (_photonView.IsMine == false) return;
+        if (_photonView.IsMine == false || _owner.State == EPlayerState.Death) return;
 
         _currentCoolTime -= Time.deltaTime;
 
@@ -76,7 +76,7 @@ public class PlayerAttack : PlayerAbility
 
     public void Hit(Collider other)
     {
-        if (_photonView.IsMine == false)
+        if (_photonView.IsMine == false || _owner.State == EPlayerState.Death)
         {
             return;
         }
@@ -86,6 +86,6 @@ public class PlayerAttack : PlayerAbility
         // RPC로 호출해야지 다른 사람의 게임오브젝트들도 이 함수가 실행된다.
         // damageableObject.Damaged(_owner.Stat.Damage);
         PhotonView otherPhotonView = other.GetComponent<PhotonView>();
-        otherPhotonView.RPC(nameof(Player.Damaged), RpcTarget.AllBuffered, _owner.Stat.Damage);
+        otherPhotonView.RPC(nameof(Player.Damaged), RpcTarget.All, _owner.Stat.Damage);
     }
 }

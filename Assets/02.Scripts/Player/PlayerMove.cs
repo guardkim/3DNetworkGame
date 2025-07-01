@@ -55,7 +55,7 @@ public class PlayerMove : PlayerAbility
 
     private void Update()
     {
-        if (_photonView.IsMine == false) return;
+        if (_photonView.IsMine == false || _owner.State == EPlayerState.Death) return;
         Movement();
         if (Input.GetButtonDown("Jump") && _controller.isGrounded && TryUseStamina(15f))
         {

@@ -1,25 +1,59 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
+
+public enum EPlayerState
+{
+    Live,
+    Death
+}
 public class Player : MonoBehaviour, IDamageable
 {
     public PlayerStat Stat;
+    private EPlayerState _state = EPlayerState.Live;
+    public EPlayerState State => _state;
     private Dictionary<Type, PlayerAbility> _abilitiesCache = new();
+
+    private Animator _animator;
+    private CharacterController _characterController;
+
+    private void Awake()
+    {
+        _animator = GetComponent<Animator>();
+        _characterController = GetComponent<CharacterController>();
+    }
 
     [PunRPC]
     public void Damaged(float damage)
     {
+        if (State == EPlayerState.Death) return;
         Stat.Health = Mathf.Max(0, Stat.Health - damage);
-        GetAbility<PlayerHealth>().Refresh();
-        Debug.Log($"{Stat.Health}현재 체력");
-
-
         if (Stat.Health <= 0)
         {
+            _state = EPlayerState.Death;
+
+
+            StartCoroutine(Death_Coroutine());
+
             PhotonView pv = GetComponent<PhotonView>();
             pv.RPC(nameof(OnDie), RpcTarget.All);
         }
+    }
+
+    private IEnumerator Death_Coroutine()
+    {
+        var wait = new WaitForSeconds(5f);
+
+        _characterController.enabled = false;
+
+        yield return wait;
+
+        _characterController.enabled = true;
+
+        Stat.Init();
+        _state = EPlayerState.Live;
     }
 
     [PunRPC]
