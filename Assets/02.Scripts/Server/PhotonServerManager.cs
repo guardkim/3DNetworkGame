@@ -6,13 +6,17 @@ using Photon.Pun;
 using Photon.Realtime;
 
 // 역할 : 포톤 서버 관리자(서버 연결, 로비 입장, 방 입장, 게임 입장)
-public class PhotonServerManager : MonoBehaviourPunCallbacks
+public class PhotonServerManager : SingletonPhoton<PhotonServerManager>
 {
     // MonoBehaviourPunCallbacks : 유니티 이벤트 말고도 PUN 서버 이벤트를 받을 수 있다.
     private readonly string _gameVersion = "1.0.0";
     private string _nickname = "GuardKim";
     private readonly AddressablesPool pool = new AddressablesPool();
 
+    protected override void Awake()
+    {
+        base.Awake();
+    }
     private void Start()
     {
         // 설정
@@ -82,12 +86,8 @@ public class PhotonServerManager : MonoBehaviourPunCallbacks
             // 진짜 고유 아이디
             Debug.Log(player.Value.UserId); // 잘 안쓰이지만, 친구 기능, 귓속말 등등에 쓰임
         }
-        // 방에 입장 완료가 되면 플레이어를 생성한다.
-        // 포톤에서는 게임 오브젝트 생성후 포톤 서버에 등록까지 해야 한다.
-        Vector3 randomPosition = SpawnPoints.Instance.GetRandomSpawnPoint();
-        Player _player = PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity).GetComponent<Player>();
-        _player.transform.position = randomPosition;
 
+        //플레이어 생성 코드는 RoomManager로 이동
     }
 
     // 룸 입장에 실패하면 호출되는 함수
