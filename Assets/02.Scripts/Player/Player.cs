@@ -19,6 +19,8 @@ public class Player : MonoBehaviour, IDamageable
     private Animator _animator;
     private CharacterController _characterController;
 
+    public GameObject DamagedEffectPrefab;
+
     private void Awake()
     {
         _animator = GetComponent<Animator>();
@@ -34,11 +36,16 @@ public class Player : MonoBehaviour, IDamageable
         {
             _state = EPlayerState.Death;
 
-
+            Instantiate(DamagedEffectPrefab, transform);
             StartCoroutine(Death_Coroutine());
 
             PhotonView pv = GetComponent<PhotonView>();
             pv.RPC(nameof(OnDie), RpcTarget.All);
+        }
+        else
+        {
+            //RPC로 호출 X
+            GetAbility<PlayerShaking>().Shake();
         }
     }
 

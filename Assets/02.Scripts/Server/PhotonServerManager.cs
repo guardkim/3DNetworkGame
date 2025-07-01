@@ -36,6 +36,7 @@ public class PhotonServerManager : MonoBehaviourPunCallbacks
         // 프리팹 미리 로드
         PhotonNetwork.PrefabPool = pool;
         pool.Preload("Player");
+        pool.Preload("AttackEffect");
     }
     // Photon 서버에 접속 후 호출되는 콜백(이벤트) 함수
     public override void OnConnected()

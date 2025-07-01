@@ -18,6 +18,7 @@ public class PlayerAttack : PlayerAbility
     private bool _isAttacking = false;
 
     public Collider WeaponCollider;
+    public GameObject AttackEffectPrefab;
 
     private void Start()
     {
@@ -82,6 +83,8 @@ public class PlayerAttack : PlayerAbility
         }
         if (other.GetComponent<IDamageable>() == null) return;
         DeActiveCollider();
+
+        Instantiate(AttackEffectPrefab, other.transform);
 
         // RPC로 호출해야지 다른 사람의 게임오브젝트들도 이 함수가 실행된다.
         // damageableObject.Damaged(_owner.Stat.Damage);

@@ -15,7 +15,7 @@ public class PlayerHealth : PlayerAbility, IPunObservable
     }
     private void Refresh()
     {
-        HealthSlider.value = _owner.Stat.Health / _owner.Stat.MaxHealth-30;
+        HealthSlider.value = _owner.Stat.Health / _owner.Stat.MaxHealth;
     }
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
