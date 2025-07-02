@@ -23,7 +23,7 @@ public class ItemObject : MonoBehaviourPun
         if(other.CompareTag("Player"))
         {
             Player player = other.GetComponent<Player>();
-
+            if (player.State == EPlayerState.Death) return;
             switch (ItemType)
             {
                 case EItemType.Score:

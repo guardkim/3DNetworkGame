@@ -10,6 +10,7 @@ TagManager:
   - Minimap
   - Bullet
   - Weapon
+  - Ground
   layers:
   - Default
   - TransparentFX
