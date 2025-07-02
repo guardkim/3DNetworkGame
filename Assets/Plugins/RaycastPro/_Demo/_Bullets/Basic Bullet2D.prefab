@@ -24,6 +24,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 533743256510626879}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 0.6, z: 1}
@@ -31,7 +32,6 @@ Transform:
   m_Children:
   - {fileID: 7002636404322164617}
   m_Father: {fileID: 3241788187009799965}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &533743256510626864
 SpriteRenderer:
@@ -50,10 +50,13 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -109,6 +112,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3241788187009799953}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -116,7 +120,6 @@ Transform:
   m_Children:
   - {fileID: 533743256510626867}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7803423184118914761
 MonoBehaviour:
@@ -136,11 +139,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   autoUpdate: 0
+  colorProfile: {fileID: 0}
   gizmosUpdate: 0
   timeMode: 0
   baseIgnoreTime: 0.1
   bulletID: 
-  unParentChild: 0
   onCast:
     m_PersistentCalls:
       m_Calls: []
@@ -150,15 +153,18 @@ MonoBehaviour:
   onEnd:
     m_PersistentCalls:
       m_Calls: []
+  onPlanar:
+    m_PersistentCalls:
+      m_Calls: []
   moveType: 0
   callMethod: OnBullet
   messageUpward: 0
+  ownerReference: {fileID: 0}
   damage: 10
   speed: 6
   lifeTime: 10
   endDelay: 0
   endFunction: 1
-  trailRenderer: {fileID: 0}
   endOnCollide: 1
   caster: {fileID: 0}
   raySource: {fileID: 0}
@@ -187,13 +193,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8056516422814794649}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.3, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 533743256510626867}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6232172284323244081
 MonoBehaviour:
@@ -213,14 +219,17 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   autoUpdate: 0
+  colorProfile: {fileID: 0}
   gizmosUpdate: 0
   liner: {fileID: 0}
-  useLinerClampedPosition: 0
-  cutOnHit: 0
+  linerClamped: 0
+  linerCutOnHit: 0
+  linerFixCut: 1
   linerEndPosition: 1
   linerBasePosition: 0
   stamp: {fileID: 0}
   local: 1
+  scalable: 0
   stampOnHit: 0
   stampAutoHide: 0
   stampOffset: 0

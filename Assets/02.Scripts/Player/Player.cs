@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
+using Random = System.Random;
 
 public enum EPlayerState
 {
@@ -12,6 +13,7 @@ public enum EPlayerState
 public class Player : MonoBehaviour, IDamageable
 {
     public PlayerStat Stat;
+    public int Score;
     private EPlayerState _state = EPlayerState.Live;
     public EPlayerState State => _state;
     private Dictionary<Type, PlayerAbility> _abilitiesCache = new();
@@ -43,11 +45,24 @@ public class Player : MonoBehaviour, IDamageable
             pv.RPC(nameof(OnDie), RpcTarget.All);
 
             RoomManager.Instance.OnPlayerDeath(pv.Owner.ActorNumber, attackerActorNumber);
+
+            if (pv.IsMine)
+            {
+                MakeItems(UnityEngine.Random.Range(1,4));
+            }
         }
         else
         {
             //RPC로 호출 X
             GetAbility<PlayerShaking>().Shake();
+        }
+    }
+
+    private void MakeItems(int count)
+    {
+        for (int i = 0; i < count; ++i)
+        {
+            PhotonNetwork.Instantiate("ScoreItem", transform.position + new Vector3(0,2,0),  Quaternion.identity, 0);
         }
     }
 
