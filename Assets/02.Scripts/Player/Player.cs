@@ -10,6 +10,8 @@ public enum EPlayerState
     Live,
     Death
 }
+
+[RequireComponent(typeof(PlayerAbility))]
 public class Player : MonoBehaviour, IDamageable
 {
     public PlayerStat Stat;
@@ -62,7 +64,22 @@ public class Player : MonoBehaviour, IDamageable
     {
         for (int i = 0; i < count; ++i)
         {
-            PhotonNetwork.Instantiate("ScoreItem", transform.position + new Vector3(0,2,0),  Quaternion.identity, 0);
+            // 포톤에서 네트워크 객체의 생명 주기
+            // Player : 플레이어가 생성하고, 플레이어가 나가면 자동 삭제(PhotonNetwork.Instantiate/Destroy)
+            // Room : 방장이 생성하고, 룸이 생성하고 룸이 없어지면 삭제(PhotonNetwork.InstantiateRoomObject/Destroy)
+            int randomNumber = UnityEngine.Random.Range(0, 10);
+            if(randomNumber < 3)
+            {
+                ItemObjectFactory.Instance.RequestCreate(EItemType.Stamina, transform.position);
+            }
+            else if (randomNumber < 5)
+            {
+                ItemObjectFactory.Instance.RequestCreate(EItemType.Heal, transform.position);
+            }
+            else
+            {
+                ItemObjectFactory.Instance.RequestCreate(EItemType.Score, transform.position);
+            }
         }
     }
 
