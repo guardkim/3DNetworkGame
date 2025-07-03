@@ -44,6 +44,7 @@ public class PhotonServerManager : SingletonPhoton<PhotonServerManager>
         pool.Preload("ScoreItem");
         pool.Preload("HealItem");
         pool.Preload("StaminaItem");
+        pool.Preload("Bear");
     }
     // Photon 서버에 접속 후 호출되는 콜백(이벤트) 함수
     public override void OnConnected()

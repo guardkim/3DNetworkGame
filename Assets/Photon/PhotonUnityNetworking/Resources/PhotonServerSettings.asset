@@ -49,6 +49,10 @@ MonoBehaviour:
   - Revive
   - Create
   - Delete
+  - SetState
+  - RPC_RequestRespawn
+  - RPC_SetAnimatorTrigger
+  - RPC_SetInitialHealth
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

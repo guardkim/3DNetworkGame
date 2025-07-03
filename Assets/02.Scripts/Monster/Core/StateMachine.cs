@@ -1,5 +1,6 @@
 
 using System.Collections.Generic;
+using Photon.Pun;
 
 public class StateMachine<T> where T : class
 {
@@ -20,9 +21,10 @@ public class StateMachine<T> where T : class
         _states[type] = state;
     }
 
+    [PunRPC]
     public void SetState(System.Type type)
     {
-        if (_states.ContainsKey(type) == false) 
+        if (_states.ContainsKey(type) == false)
         {
             UnityEngine.Debug.LogError($"[StateMachine] {_owner.GetType().Name}: 상태 '{type.Name}'를 찾을 수 없습니다.");
             return;

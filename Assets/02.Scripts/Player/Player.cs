@@ -40,7 +40,6 @@ public class Player : MonoBehaviour, IDamageable
         {
             _state = EPlayerState.Death;
 
-            Instantiate(DamagedEffectPrefab, transform);
             StartCoroutine(Death_Coroutine());
 
             PhotonView pv = GetComponent<PhotonView>();
@@ -55,7 +54,9 @@ public class Player : MonoBehaviour, IDamageable
         }
         else
         {
+
             //RPC로 호출 X
+            Instantiate(DamagedEffectPrefab, transform);
             GetAbility<PlayerShaking>().Shake();
         }
     }
