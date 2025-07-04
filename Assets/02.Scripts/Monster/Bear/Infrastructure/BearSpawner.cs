@@ -1,6 +1,8 @@
 
+using System;
 using Photon.Pun;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class BearSpawner : MonoBehaviourPunCallbacks
 {
@@ -14,6 +16,11 @@ public class BearSpawner : MonoBehaviourPunCallbacks
     [SerializeField] private Transform[] spawnPoints;
 
     public override void OnJoinedRoom()
+    {
+        //MasterClient가 스폰하는데 OnJoinedRoom은 안들어옴
+    }
+
+    private void Start()
     {
         if (PhotonNetwork.IsMasterClient)
         {

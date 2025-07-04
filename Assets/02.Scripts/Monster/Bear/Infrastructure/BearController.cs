@@ -82,7 +82,7 @@ public class BearController : MonoBehaviourPunCallbacks, IDamageable, IPunObserv
         if (stream.IsWriting)
         {
             // 마스터 클라이언트가 체력 정보를 보냄
-            stream.SendNext(_currentHealth);
+            stream.SendNext(_currentHealth / maxHealth);
             Debug.Log($"[PhotonSerializeView] MasterClient Sending Health: {_currentHealth}");
         }
         else
