@@ -76,8 +76,5 @@ public class RoomManager : SingletonPhoton<RoomManager>
     private void SetRoom()
     {
         _room = PhotonNetwork.CurrentRoom;
-        Debug.Log(_room.Name);
-        Debug.Log(_room.PlayerCount);
-        Debug.Log(_room.MaxPlayers);
     }
 }

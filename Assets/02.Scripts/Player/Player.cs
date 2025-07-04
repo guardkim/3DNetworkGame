@@ -49,6 +49,8 @@ public class Player : MonoBehaviour, IDamageable
 
             if (pv.IsMine)
             {
+                var actorPlayer = PhotonNetwork.CurrentRoom.GetPlayer(attackerActorNumber);
+                pv.RPC(nameof(RequestAddKillCount), actorPlayer);
                 MakeItems(UnityEngine.Random.Range(1,4));
             }
         }
@@ -61,6 +63,11 @@ public class Player : MonoBehaviour, IDamageable
         }
     }
 
+    [PunRPC]
+    public void RequestAddKillCount()
+    {
+        ScoreManager.Instance.AddKillCount();
+    }
     private void MakeItems(int count)
     {
         for (int i = 0; i < count; ++i)
