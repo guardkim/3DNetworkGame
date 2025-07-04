@@ -15,6 +15,16 @@ MonoBehaviour:
   m_GroupName: Default Local Group
   m_GUID: 789b4feb7ff39b0458f9c1c433a1df61
   m_SerializeEntries:
+  - m_GUID: 20db4f70a1221e1428bc9375ea8c1f9a
+    m_Address: FemalePlayer
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 241f14cc14ff4c144bf38fd561f68c4a
+    m_Address: MalePlayer
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 2dd489a6be3983449b17bb434794bdeb
     m_Address: StaminaProgressbar
     m_ReadOnly: 0

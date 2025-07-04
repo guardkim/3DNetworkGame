@@ -10,8 +10,10 @@ public class PhotonServerManager : SingletonPhoton<PhotonServerManager>
 {
     // MonoBehaviourPunCallbacks : 유니티 이벤트 말고도 PUN 서버 이벤트를 받을 수 있다.
     private readonly string _gameVersion = "1.0.0";
-    private string _nickname = "GuardKim";
-    private readonly AddressablesPool pool = new AddressablesPool();
+    // private string _nickname = "GuardKim";
+    public readonly AddressablesPool pool = new AddressablesPool();
+
+    public bool IsMale = true;
 
     protected override void Awake()
     {
@@ -28,7 +30,7 @@ public class PhotonServerManager : SingletonPhoton<PhotonServerManager>
         PhotonNetwork.GameVersion = _gameVersion;
 
         // 2. 닉네임 : 게임에서 사용할 사용자의 별명(중복 가능 -> 판별을 위해서는 ActorID)
-        PhotonNetwork.NickName = _nickname;
+        // PhotonNetwork.NickName = _nickname;
 
         // 방장이 로드한 씬으로 다른 참여자가 똑같이 이동하게끔 동기화 해주는 옵션
         // 방장 : 방을 만든 소유자이자 "마스터 클라이언트" (방마다 한명의 마스터 클라이언트가 존재)
@@ -39,7 +41,8 @@ public class PhotonServerManager : SingletonPhoton<PhotonServerManager>
         PhotonNetwork.ConnectUsingSettings();
         // 프리팹 미리 로드
         PhotonNetwork.PrefabPool = pool;
-        pool.Preload("Player");
+        pool.Preload("MalePlayer");
+        pool.Preload("FemalePlayer");
         pool.Preload("AttackEffect");
         pool.Preload("ScoreItem");
         pool.Preload("HealItem");
@@ -70,7 +73,8 @@ public class PhotonServerManager : SingletonPhoton<PhotonServerManager>
         Debug.Log($"InLobby : {PhotonNetwork.InLobby}"); // 로비 입장 유무
 
         // 랜덤 룸에 들어간다.
-        PhotonNetwork.JoinRandomRoom();
+        // PhotonNetwork.JoinRandomRoom();
+        // 이제부턴 생성된 룸 ID에 들어감
     }
 
     // 룸에 입장한 후 호출되는 함수
@@ -79,17 +83,28 @@ public class PhotonServerManager : SingletonPhoton<PhotonServerManager>
         Debug.Log($"룸 입장 {PhotonNetwork.InRoom}. : {PhotonNetwork.CurrentRoom.Name}");
         Debug.Log($"플레이어 = {PhotonNetwork.CurrentRoom.PlayerCount}명");
 
-        // 룸에 접속한 사용자 정보
-        Dictionary<int, Photon.Realtime.Player> roomPlayers = PhotonNetwork.CurrentRoom.Players;
-        foreach (KeyValuePair<int, Photon.Realtime.Player> player in roomPlayers)
+        if (PhotonNetwork.IsMasterClient)
         {
-            Debug.Log($"{player.Value.NickName} : {player.Value.ActorNumber}");
-            // ActorNumber는 Room안에서의 플레이어에 대한 판별 ID
-            // ㄴ 이것만으로 충분
+            //MasterClient만 Load해도 다른 Client들도 같이 이동됨.
+            PhotonNetwork.LoadLevel("Battle");
 
-            // 진짜 고유 아이디
-            Debug.Log(player.Value.UserId); // 잘 안쓰이지만, 친구 기능, 귓속말 등등에 쓰임
+            // Start에 있는 이 코드가 Scene을 다른 클라이언트와 동기화 해준다.
+            // 쓸 때와 안 쓸때 타이밍을 잘 해야한다.
+            // PhotonNetwork.AutomaticallySyncScene = true;
         }
+
+
+        // // 룸에 접속한 사용자 정보
+        // Dictionary<int, Photon.Realtime.Player> roomPlayers = PhotonNetwork.CurrentRoom.Players;
+        // foreach (KeyValuePair<int, Photon.Realtime.Player> player in roomPlayers)
+        // {
+        //     Debug.Log($"{player.Value.NickName} : {player.Value.ActorNumber}");
+        //     // ActorNumber는 Room안에서의 플레이어에 대한 판별 ID
+        //     // ㄴ 이것만으로 충분
+        //
+        //     // 진짜 고유 아이디
+        //     Debug.Log(player.Value.UserId); // 잘 안쓰이지만, 친구 기능, 귓속말 등등에 쓰임
+        // }
 
         //플레이어 생성 코드는 RoomManager로 이동
     }
@@ -99,14 +114,9 @@ public class PhotonServerManager : SingletonPhoton<PhotonServerManager>
     {
         Debug.Log($"랜덤 방 입장에 실패했습니다 : {returnCode} : {message}");
 
-        // Room 속성 정의
-        RoomOptions roomOptions = new RoomOptions();
-        roomOptions.MaxPlayers = 20;
-        roomOptions.IsOpen = true; // 룸 입장 가능 여부
-        roomOptions.IsVisible = true; // 로비(채널) 룸 목록에 노출시킬지 여부
+        // 이제부턴 랜덤방이 아닌 룸 ID를 조회해서 입장
+        return;
 
-        // Room 생성
-        PhotonNetwork.CreateRoom("test", roomOptions);
     }
 
     // 룸 생성에 실패했을 때 호출되는 함수

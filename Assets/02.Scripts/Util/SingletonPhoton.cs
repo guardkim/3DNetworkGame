@@ -1,76 +1,53 @@
 using Photon.Pun;
 using UnityEngine;
-public class SingletonPhoton<T> : MonoBehaviourPunCallbacks where T : MonoBehaviourPunCallbacks
+public abstract class SingletonPhoton<T> : MonoBehaviourPunCallbacks where T : MonoBehaviourPunCallbacks
 {
-    [SerializeField]
-    private bool _dontDestroy = true;
-    private static bool _isQuitting = false;
-    private static T _instance;
-    public static T Instance
+    public enum InitializationTiming
     {
-        get
-        {
-            if (_isQuitting)
-            {
-                return null;
-            }
-
-            if (_instance == null)
-            {
-                T[] instances = FindObjectsByType<T>(FindObjectsSortMode.None);
-
-                if (1 < instances.Length)
-                {
-                    for (int i = 1; i < instances.Length; i++)
-                    {
-                        Destroy(instances[i].gameObject);
-                    }
-                }
-
-                _instance = instances.Length > 0 ? instances[0] : null;
-                if (_instance == null)
-                {
-                    GameObject go = new GameObject(typeof(T).Name, typeof(T));
-                    _instance = go.GetComponent<T>();
-                }
-            }
-            return _instance;
-        }
+        Awake,
+        Start,
+        LateStart
     }
+
+    [SerializeField]
+    private InitializationTiming initializeOn = InitializationTiming.Awake;
+
+    public static T Instance { get; protected set; }
+
     protected virtual void Awake()
     {
-        if (_instance != null)
+        if (initializeOn == InitializationTiming.Awake)
         {
-            Destroy(transform.root.gameObject);
-            return;
+            TryInitialize();
         }
-        _instance = this as T;
-
-        if (_dontDestroy && transform.parent != null && transform.root != null)
-        {
-            DontDestroyOnLoad(transform.root.gameObject);
-        }
-        // else
-        // {
-        //     GameObject rootGO = GameObject.FindGameObjectWithTag("Singleton");
-        //     if (rootGO != null)
-        //     {
-        //         transform.SetParent(rootGO.transform);
-        //     }
-        //     else if (_dontDestroy)
-        //     {
-        //         DontDestroyOnLoad(gameObject);
-        //     }
-        // }
     }
 
-    private void OnApplicationQuit()
+    protected virtual void Start()
     {
-        _isQuitting = true;
+        if (initializeOn == InitializationTiming.Start)
+        {
+            TryInitialize();
+        }
     }
 
-    protected virtual void OnDestroy()
+    private void LateUpdate()
     {
-        _instance = null;
+        if (initializeOn == InitializationTiming.LateStart)
+        {
+            TryInitialize();
+        }
+    }
+
+    private void TryInitialize()
+    {
+        if (Instance == null)
+        {
+            Instance = GetComponent<T>();
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
     }
 }
